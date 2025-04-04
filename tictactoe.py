@@ -2,6 +2,18 @@ import tkinter as tk
 
 from tkinter import font
 
+from typing import NamedTuple
+
+
+class Player(NamedTuple):
+    label: str
+    color: str
+
+class Move(NamedTuple):
+    row: int
+    col: int
+    label: str = ""
+
 class TicTacToeBoard(tk.Tk):
     def __init__(self):
         super().__init__()
@@ -44,6 +56,16 @@ class TicTacToeBoard(tk.Tk):
                     pady=5,
                     sticky="nsew"
                 )
+    def _get_winning_combos(self):
+        rows = [
+            [(move.row, move.col) for move in row]
+            for row in self._current_moves
+        ]
+        columns = [list(col) for col in zip(*rows)]
+        first_diagonal = [row[i] for i, row in enumerate(rows)]
+        second_diagonal = [col[j] for j, col in enumerate(reversed(columns))]
+        return rows + columns + [first_diagonal, second_diagonal]
+    
 
 def main():
     board = TicTacToeBoard()
